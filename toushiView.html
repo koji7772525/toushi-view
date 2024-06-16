@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投資シミュレーター</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse; /* テーブルのボーダーを無効化 */
+            line-height: 1.5; /* 行間を調整 */
+        }
+        td {
+            padding: 10px;
+            text-align: center;
+        }
+        .button {
+            padding: 3px 10px;
+            margin: 2px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .fixed-length {
+            display: inline-block;
+            width: 60px; /* 固定長を設定 */
+            text-align: right; /* 右詰めにする */
+            font-family: monospace; /* 等幅フォントにする */
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <table>
+            <tr>
+                <td>
+                    <button class="button decreaseL" data-value="-1000">--</button>
+                    <button class="button decreaseS" data-value="-500">-</button>
+                    投資金額：<span id="investmentAmount" class="fixed-length">0円</span>
+                    <button class="button increaseS" data-value="500">+</button>
+                    <button class="button increaseL" data-value="1000">++</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="button decreaseL" data-value="-1000">--</button>
+                    <button class="button decreaseS" data-value="-100">-</button>
+                    現在持球：<span id="currentBalls" class="fixed-length">0玉</span>
+                    <button class="button increaseS" data-value="100">+</button>
+                    <button class="button increaseL" data-value="1000">++</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="button decreaseL" data-value="-100">--</button>
+                    <button class="button decreaseS" data-value="-10">-</button>
+                    現在持ﾒﾀ：<span id="currentMetals" class="fixed-length">0枚</span>
+                    <button class="button increaseS" data-value="10">+</button>
+                    <button class="button increaseL" data-value="100">++</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        // イベントリスナーを設定する
+        var decreaseLButtons = document.querySelectorAll('.button.decreaseL');
+        var decreaseSButtons = document.querySelectorAll('.button.decreaseS');
+        var increaseLButtons = document.querySelectorAll('.button.increaseL');
+        var increaseSButtons = document.querySelectorAll('.button.increaseS');
+
+        decreaseLButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var value = parseInt(button.getAttribute('data-value'));
+                var targetId = button.parentElement.querySelector('span').id;
+                updateValue(targetId, value);
+            });
+        });
+
+        decreaseSButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var value = parseInt(button.getAttribute('data-value'));
+                var targetId = button.nextElementSibling.id;
+                updateValue(targetId, value);
+            });
+        });
+
+        increaseLButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var value = parseInt(button.getAttribute('data-value'));
+                var targetId = button.parentElement.querySelector('span').id;
+                updateValue(targetId, value);
+            });
+        });
+
+        increaseSButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var value = parseInt(button.getAttribute('data-value'));
+                var targetId = button.previousElementSibling.id;
+                updateValue(targetId, value);
+            });
+        });
+
+        // 値の更新処理
+        function updateValue(id, value) {
+            var target = document.getElementById(id);
+            var currentValue = parseInt(target.textContent); // 現在の数値を取得
+            var newValue = currentValue + value; // 増減後の新しい値
+            
+            // 数値を5桁に調整し、右詰めで空白で埋める
+            var formattedValue = String(newValue).padStart(5, ' ');
+
+            target.textContent = newValue + getUnit(id); // 更新された値を表示
+        }
+
+        // 単位を取得する関数
+        function getUnit(id) {
+            if (id === 'investmentAmount') {
+                return '円';
+            } else if (id === 'currentBalls') {
+                return '玉';
+            } else if (id === 'currentMetals') {
+                return '枚';
+            }
+            return '';
+        }
+    </script>
+</body>
+</html>
